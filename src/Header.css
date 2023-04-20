@@ -1,9 +1,25 @@
-
 .header {
-     background-color: #1A242F;
-     display: flex;
-     align-items: center;
-     justify-content: center;
-     font-size: calc(10px + 2vmin);
-     color: white;
-   }
+  background-color: #1a242f;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  padding: 0 40px;
+}
+
+.route {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.route > span {
+  font-size: 20px;
+  font-weight: 400;
+}
+
+.active {
+  color: rgb(175, 145, 203);
+}

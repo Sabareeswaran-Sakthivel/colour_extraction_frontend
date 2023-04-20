@@ -36,4 +36,14 @@
   to {
     transform: rotate(360deg);
   }
-} 
+}
+
+.link {
+  color: white;
+  font-size: 20px;
+  text-decoration: none;
+}
+
+.link:hover {
+  color: rgb(175, 145, 203);
+}

@@ -5,7 +5,7 @@ import axios from "axios";
 const Home = () => {
   const [image, setImage] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [data, setData] = useState([]);
+  const [data, setData] = useState();
   const onUploadChange = async (e) => {
     setImage(e.target.files[0]);
     setSelectedImage(URL.createObjectURL(e.target.files[0]));
@@ -22,6 +22,7 @@ const Home = () => {
         { headers: { "Content-Type": "multipart/form-data" } }
       );
       setData(response.data);
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -72,7 +73,7 @@ const Home = () => {
                   <th>W-value</th>
                 </tr>
 
-                {data.map((element, index) => {
+                {data && data.map((element, index) => {
                   return (
                     <tr key={index}>
                       <td>{element["Pantone Number"]}</td>
