@@ -1,5 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
+// import { useFormik } from 'formik';
+// import { Button } from 'primereact/button';
+// import { Toast } from 'primereact/toast';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { RadioButton } from "primereact/radiobutton";
 
 const Compare = () => {
   const [image, setImage] = useState(null);
@@ -7,6 +13,14 @@ const Compare = () => {
   const [beforeImage, setBeforeImage] = useState(null);
   const [afterImage, setAfterImage] = useState(null);
   const [data, setData] = useState([]);
+
+  const categories = [
+    { name: "Accounting", key: "A" },
+    { name: "Marketing", key: "M" },
+    { name: "Production", key: "P" },
+    { name: "Research", key: "R" },
+  ];
+  const [selectedCategory, setSelectedCategory] = useState("");
 
   const onImageChange = async (e) => {
     setImage(e.target.files[0]);
@@ -24,6 +38,7 @@ const Compare = () => {
     formData.append("image", image2);
     console.log(image);
     console.log(image2);
+    getFormErrorMessage(selectedCategory);
     try {
       const response = await axios.post(
         "http://localhost:8000/api/photo",
@@ -35,6 +50,19 @@ const Compare = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const isFormFieldInvalid = (name) => {
+     console.log(!!name.name);
+     return !!name.name
+  };
+
+  const getFormErrorMessage = (name) => {
+    return isFormFieldInvalid(name) ? (
+      toast.success('Radio button is selected!')
+    ) : (
+      toast.error('Value is required')
+    );
   };
 
   return (
@@ -100,12 +128,43 @@ const Compare = () => {
           )}
         </div>
       </div>
+      <div
+        style={{
+          marginTop: "2rem",
+          display: "flex",
+          width: "100%",
+          justifyContent: "center",
+          gap: "2rem",
+        }}
+      >
+        <div className="flex flex-column gap-3">
+          {categories.map((category) => {
+            return (
+              <div key={category.key} className="flex align-items-center">
+                <RadioButton
+                  inputId={category.key}
+                  name="category"
+                  value={category}
+                  onChange={(e) => setSelectedCategory(e.value)}
+                  checked={selectedCategory.key === category.key}
+                />
+                <label htmlFor={category.key} className="ml-2">
+                  {category.name}
+                </label>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+      {/* {getFormErrorMessage(selectedCategory)} */}
 
       <div className="button-div">
         <button className="button-css" onClick={compareApi}>
           Upload
         </button>
+        <ToastContainer />
       </div>
+      
     </div>
   );
 };
