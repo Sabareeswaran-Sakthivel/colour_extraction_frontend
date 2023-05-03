@@ -16,7 +16,13 @@ export default function () {
           className={({ isActive }) => (isActive ? "link active" : "link")}
           to="/detectchecking"
         >
-          <span>Detect Checking</span>
+          <span>Defect Checking</span>
+        </NavLink>
+        <NavLink
+          className={({ isActive }) => (isActive ? "link active" : "link")}
+          to="/espModule"
+        >
+          <span>Defect Detection</span>
         </NavLink>
       </div>
     </div>
