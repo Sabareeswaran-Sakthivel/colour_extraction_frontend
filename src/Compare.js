@@ -3,8 +3,8 @@ import axios from "axios";
 // import { useFormik } from 'formik';
 // import { Button } from 'primereact/button';
 // import { Toast } from 'primereact/toast';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { RadioButton } from "primereact/radiobutton";
 
 const Compare = () => {
@@ -13,12 +13,11 @@ const Compare = () => {
   const [beforeImage, setBeforeImage] = useState(null);
   const [afterImage, setAfterImage] = useState(null);
   const [data, setData] = useState([]);
+  const [result, setResult] = useState(null);
 
   const categories = [
-    { name: "Accounting", key: "A" },
-    { name: "Marketing", key: "M" },
-    { name: "Production", key: "P" },
-    { name: "Research", key: "R" },
+    { name: "Full Image", key: "F" },
+    { name: "Crop the Design", key: "C" },
   ];
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -40,12 +39,27 @@ const Compare = () => {
     console.log(image2);
     getFormErrorMessage(selectedCategory);
     try {
-      const response = await axios.post(
-        "http://localhost:8000/api/photo",
-        formData,
-        { headers: { "Content-Type": "multipart/form-data" } }
-      );
-      setData(response.data);
+      let url;
+      // if (selectedCategory.name == "Full Image") {
+      //   url = "http://localhost:8000/api/pantones2";
+      // } else {
+      //   url = "http://localhost:8000/api/pantones1";
+      // }
+      url = "http://localhost:8000/v2/image/diff";
+      const response = await axios.post(url, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      console.log("Data", response.data);
+      let results = String(response.data.toString()[0]);
+      // result = String(response.data.toString()[0]);
+      // console.log("Result", result);
+
+      console.log(!!result);
+      if (results !== "n") {
+        setData(response.data);
+      } else {
+        setResult(response.data.toString()[0]);
+      }
       // console.log(URL.createObjectURL(data));
     } catch (error) {
       console.log(error);
@@ -53,16 +67,14 @@ const Compare = () => {
   };
 
   const isFormFieldInvalid = (name) => {
-     console.log(!!name.name);
-     return !!name.name
+    console.log(!!name.name);
+    return !!name.name;
   };
 
   const getFormErrorMessage = (name) => {
-    return isFormFieldInvalid(name) ? (
-      toast.success('Radio button is selected!')
-    ) : (
-      toast.error('Value is required')
-    );
+    return isFormFieldInvalid(name)
+      ? toast.success("Request Processing")
+      : toast.error("Value is required");
   };
 
   return (
@@ -164,7 +176,26 @@ const Compare = () => {
         </button>
         <ToastContainer />
       </div>
-      
+      <div className="mt-5 text-center">
+        {data.length > 0 && (
+          <div>
+            <h2>Output</h2>
+            <img
+              src={`http://localhost:8000/output.png`}
+              alt="output"
+              width="250"
+              height="300"
+            />
+          </div>
+        )}
+      </div>
+      <div className="mt-5 text-center">
+        {!!result && (
+          <div>
+            <h2>No difference</h2>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
